@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -9,34 +7,55 @@ using System.Web;
 using System.Web.Mvc;
 using GILL_BLOG.Helpers;
 using GILL_BLOG.Models;
+using PagedList;
+using PagedList.Mvc;
+using System.Data.Entity;
+using Microsoft.AspNet.Identity;
 
 namespace GILL_BLOG.Controllers
 {
+    [RequireHttps]
     public class BlogPostsController : Controller
     {
        
             private ApplicationDbContext db = new ApplicationDbContext();
 
-            // GET: BlogPosts
-            public ActionResult Index()
+        // GET: BlogPosts
+        public ActionResult Index(int? page, string searchString)
+        {
+            int pageSize = 1; // display three blog posts at a time on this page
+            int pageNumber = (page ?? 1);
+
+            var postQuery = db.Posts.OrderBy(p => p.Created).AsQueryable();
+
+            if(!string.IsNullOrWhiteSpace(searchString))
             {
-                return View(db.Posts.ToList());
+                postQuery = postQuery
+                    .Where(p => p.Title.Contains(searchString) ||
+                                p.Body.Contains(searchString) ||
+                                p.Slug.Contains(searchString) ||
+                                p.Comments.Any(t => t.Body.Contains(searchString))
+                           ).AsQueryable();
             }
+            var postList = postQuery.ToPagedList(pageNumber, pageSize);
+            ViewBag.SearchString = searchString;
+            return View(postList); 
+        }
 
             // GET: BlogPosts/Details/5
             public ActionResult Details(int? id)
             {
-                if (id == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
-                BlogPost blogPost = db.Posts.Find(id);
-                if (blogPost == null)
-                {
-                    return HttpNotFound();
-                }
-                return View(blogPost);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            BlogPost blogPost = db.Posts.Find(id);
+            if (blogPost == null)
+            {
+                return HttpNotFound();
+            }
+            return View(blogPost);
+        }
             // GET: BlogPosts/Details/5
             public ActionResult DetailsSlug(string slug)
             {
@@ -44,13 +63,48 @@ namespace GILL_BLOG.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                BlogPost blogPost = db.Posts.Where(p => p.Slug == slug).FirstOrDefault();
-                if (blogPost == null)
+            BlogPost blogPost = db.Posts
+                           .Include(p => p.Comments.Select(t => t.Author))
+                           .Where(p => p.Slug == slug)
+                           
+                           .FirstOrDefault();
+            if (blogPost == null)
                 {
                     return HttpNotFound();
                 }
                 return View("Details", blogPost);
+        }
+
+            // POST: BlogPosts/Details/5
+        [HttpPost]
+        public ActionResult DetailsSlug(string slug, string body)
+        {
+            if (slug == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            var blogPost = db.Posts
+               .Where(p => p.Slug == slug)
+               .FirstOrDefault();
+            if (blogPost == null)
+            {
+                return HttpNotFound();
+            }
+            if (string.IsNullOrWhiteSpace(body))
+            {
+                ViewBag.ErrorMessage = "Comment is required";
+                return View("Details", blogPost);
+            }
+            var comment = new Comment();
+            comment.AuthorId = User.Identity.GetUserId();
+            comment.PostId = blogPost.Id;
+            comment.Created = DateTime.Now;
+            comment.Body = body;
+            db.Comments.Add(comment);
+            db.SaveChanges();
+            return RedirectToAction("DetailsSlug", new { slug = slug });
+        }
+
 
         // GET: BlogPosts/Create
         [Authorize(Roles = "Admin")]
@@ -80,19 +134,21 @@ namespace GILL_BLOG.Controllers
                         ModelState.AddModelError("Title", "The title must be unique");
                         return View(blogPost);
                     }
+                if (ImageUploadValidator.IsWebFriendlyImage(image))
+                {
+                    var fileName = Path.GetFileName(image.FileName);
+                    image.SaveAs(Path.Combine(Server.MapPath("~/Uploads/"), fileName));
+                    blogPost.MediaURL = "/Uploads/" + fileName;
+                }
 
-                    blogPost.Slug = Slug;
+                blogPost.Slug = Slug;
                     blogPost.Created = DateTimeOffset.Now;
                     db.Posts.Add(blogPost);
                     db.SaveChanges();
-                    return RedirectToAction("Index");
+                   
+                return RedirectToAction("Index");
                 }
-            if (ImageUploadValidator.IsWebFriendlyImage(image))
-            {
-                var fileName = Path.GetFileName(image.FileName);
-                image.SaveAs(Path.Combine(Server.MapPath("~/Uploads/"), fileName));
-                blogPost.MediaURL = "/Uploads/" + fileName;
-            }
+            
 
             return View(blogPost);
             }
@@ -132,15 +188,15 @@ namespace GILL_BLOG.Controllers
                     blog.Updated = DateTime.Now;
 
                     db.SaveChanges();
-
-                    return RedirectToAction("Index");
+                    if (ImageUploadValidator.IsWebFriendlyImage(image))
+                    {
+                        var fileName = Path.GetFileName(image.FileName);
+                        image.SaveAs(Path.Combine(Server.MapPath("~/Uploads/"), fileName));
+                        blogPost.MediaURL = "/Uploads/" + fileName;
+                    }
+                return RedirectToAction("Index");
                 }
-            if (ImageUploadValidator.IsWebFriendlyImage(image))
-            {
-                var fileName = Path.GetFileName(image.FileName);
-                image.SaveAs(Path.Combine(Server.MapPath("~/Uploads/"), fileName));
-                blogPost.MediaURL = "/Uploads/" + fileName;
-            }
+            
             return View(blogPost);
             }
 
@@ -171,7 +227,40 @@ namespace GILL_BLOG.Controllers
                 return RedirectToAction("Index");
             }
 
-            protected override void Dispose(bool disposing)
+        [HttpPost]
+        [Authorize]
+        public ActionResult CreateComment(string slug, string body)
+        {
+            if (slug == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var blogPost = db.Posts
+               .Where(p => p.Slug == slug)
+               .FirstOrDefault();
+            if (blogPost == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (string.IsNullOrWhiteSpace(body))
+            {
+                TempData["ErrorMessage"] = "Comment is required";
+                return RedirectToAction("DetailsSlug", new { slug = slug });
+            }
+
+            var comment = new Comment();
+            comment.AuthorId = User.Identity.GetUserId();
+            comment.PostId = blogPost.Id;
+            comment.Created = DateTime.Now;
+            comment.Body = body;
+            db.Comments.Add(comment);
+            db.SaveChanges();
+            return RedirectToAction("DetailsSlug", new { slug = slug });
+        }
+
+
+        protected override void Dispose(bool disposing)
             {
                 if (disposing)
                 {

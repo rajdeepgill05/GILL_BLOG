@@ -18,7 +18,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44317</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -46,6 +46,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -196,6 +202,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BlogPostsController.cs" />
+    <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
@@ -219,6 +226,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\clean-blog.css" />
     <Content Include="Content\clean-blog.min.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="font-awesome\css\font-awesome.css" />
     <Content Include="font-awesome\css\font-awesome.min.css" />
@@ -226,11 +234,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="img\about-bg.jpg" />
-    <Content Include="img\contact-bg.jpg" />
-    <Content Include="img\home-bg.jpg" />
-    <Content Include="img\post-bg.jpg" />
-    <Content Include="img\post-sample-image.jpg" />
+    <Content Include="Helpers\img\about-bg.jpg" />
+    <Content Include="Helpers\img\contact-bg.jpg" />
+    <Content Include="Helpers\img\home-bg.jpg" />
+    <Content Include="Helpers\img\post-bg.jpg" />
+    <Content Include="Helpers\img\post-sample-image.jpg" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -474,6 +482,11 @@
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-mobile.woff" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
+    <Content Include="Views\Comments\Create.cshtml" />
+    <Content Include="Views\Comments\Delete.cshtml" />
+    <Content Include="Views\Comments\Details.cshtml" />
+    <Content Include="Views\Comments\Edit.cshtml" />
+    <Content Include="Views\Comments\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -508,7 +521,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>60272</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:60272/</IISUrl>
+          <IISUrl>https://localhost:44317/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

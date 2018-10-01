@@ -10,6 +10,7 @@ using GILL_BLOG.Models;
 
 namespace GILL_BLOG.Controllers
 {
+    [RequireHttps]
     [Authorize]
     public class ManageController : Controller
     {

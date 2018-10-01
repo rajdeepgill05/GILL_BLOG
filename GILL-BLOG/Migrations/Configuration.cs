@@ -34,7 +34,7 @@ namespace GILL_BLOG.Migrations
             //Check if the admin user is already created.
             //If not, create it.
             ApplicationUser adminUser = null;
-            if (!context.Users.Any(p => p.UserName == "admin@myblogapp.com"))
+            if (!context.Users.Any(p => p.UserName == "rajdeepgill98@yahoo.com"))
             {
                 adminUser = new ApplicationUser();
                 adminUser.UserName = "rajdeepgill98@yahoo.com";
@@ -42,7 +42,7 @@ namespace GILL_BLOG.Migrations
                 adminUser.FirstName = "Rajdeep";
                 adminUser.LastName = "Gill";
                 adminUser.DisplayName = "Rajdeep Gill";
-                userManager.Create(adminUser, "G!llr@jdeep");
+                userManager.Create(adminUser, "G!llr@jdeep1");
             }
             else
             {
@@ -55,6 +55,7 @@ namespace GILL_BLOG.Migrations
             {
                 userManager.AddToRole(adminUser.Id, "Admin");
             }
+            
         }
     }
 }

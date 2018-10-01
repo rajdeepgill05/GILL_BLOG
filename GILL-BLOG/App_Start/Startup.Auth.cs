@@ -58,11 +58,12 @@ namespace GILL_BLOG
             //   appId: "",
             //   appSecret: "");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "739820926707-5ten8bl396buf8hdsl0gq4o05dp9qm73.apps.googleusercontent.com",
+                ClientSecret = "Pj9UOTbWFpZ5EAhXlzIxTWbM",
+
+            });
         }
     }
 }

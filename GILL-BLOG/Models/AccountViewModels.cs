@@ -8,6 +8,9 @@ namespace GILL_BLOG.Models
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
+        public string FirstName { get; internal set; }
+        public string LastName { get; internal set; }
+        public string DisplayName { get; internal set; }
     }
 
     public class ExternalLoginListViewModel
@@ -79,6 +82,14 @@ namespace GILL_BLOG.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        [Required]
+        public string DisplayName { get; set; }
+
     }
 
     public class ResetPasswordViewModel

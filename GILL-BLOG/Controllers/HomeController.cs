@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using GILL_BLOG.Models;
 
 namespace GILL_BLOG.Controllers
 {
+    [RequireHttps]
     public class HomeController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
+
         public ActionResult Index()
         {
-            return View();
+            return View(db.Posts.ToList());
         }
 
         public ActionResult About()

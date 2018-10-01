@@ -12,7 +12,6 @@ namespace GILL_BLOG.Models
         {
             Comments = new HashSet<Comment>();
             Created = DateTime.Now;
-
         }
 
         public int Id { get; set; }

@@ -113,8 +113,12 @@ C:\Users\SD13\Desktop\BACK-END\course2\GILL-BLOG\GILL-BLOG\bin\Microsoft.AI.Depe
 C:\Users\SD13\Desktop\BACK-END\course2\GILL-BLOG\GILL-BLOG\bin\Microsoft.AI.WindowsServer.xml
 C:\Users\SD13\Desktop\BACK-END\course2\GILL-BLOG\GILL-BLOG\bin\Microsoft.AI.Web.xml
 C:\Users\SD13\Desktop\BACK-END\course2\GILL-BLOG\GILL-BLOG\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\SD13\Desktop\BACK-END\course2\GILL-BLOG\GILL-BLOG\obj\Debug\GILL-BLOG.csprojAssemblyReference.cache
 C:\Users\SD13\Desktop\BACK-END\course2\GILL-BLOG\GILL-BLOG\obj\Debug\GILL-BLOG.csproj.CoreCompileInputs.cache
 C:\Users\SD13\Desktop\BACK-END\course2\GILL-BLOG\GILL-BLOG\obj\Debug\GILL-BLOG.csproj.CopyComplete
 C:\Users\SD13\Desktop\BACK-END\course2\GILL-BLOG\GILL-BLOG\obj\Debug\GILL-BLOG.dll
 C:\Users\SD13\Desktop\BACK-END\course2\GILL-BLOG\GILL-BLOG\obj\Debug\GILL-BLOG.pdb
+C:\Users\SD13\Desktop\BACK-END\course2\GILL-BLOG\GILL-BLOG\bin\PagedList.dll
+C:\Users\SD13\Desktop\BACK-END\course2\GILL-BLOG\GILL-BLOG\bin\PagedList.Mvc.dll
+C:\Users\SD13\Desktop\BACK-END\course2\GILL-BLOG\GILL-BLOG\bin\PagedList.xml
+C:\Users\SD13\Desktop\BACK-END\course2\GILL-BLOG\GILL-BLOG\bin\PagedList.Mvc.xml
+C:\Users\SD13\Desktop\BACK-END\course2\GILL-BLOG\GILL-BLOG\obj\Debug\GILL-BLOG.csprojAssemblyReference.cache
